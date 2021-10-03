@@ -32,6 +32,15 @@ view: fahrzeugauslastung_kpi {
     sql: ${TABLE}.Fahrzeugtyp ;;
   }
 
+  dimension: fahrzeugtyp_2 {
+    type: string
+    sql: case when ${fahrzeugtyp} = "ASK" THEN "ASK"
+    when ${fahrzeugtyp} = "GAB" THEN "GAB"
+    WHEN ${fahrzeugtyp} = "Sonstiges" THEN "Sonstiges"
+    ELSE "Umleerer" END;;
+    label: "Fzg. typ"
+  }
+
   dimension: fi_bk_nr {
     type: number
     sql: ${TABLE}.FI_BK_NR ;;
@@ -40,6 +49,7 @@ view: fahrzeugauslastung_kpi {
   dimension: fi_region {
     type: string
     sql: ${TABLE}.fi_region ;;
+    label: "Region"
   }
 
   dimension: ist_at_monat {
@@ -87,6 +97,13 @@ view: fahrzeugauslastung_kpi {
     sql: ${TABLE}.REL_AUSLASTUNG ;;
   }
 
+  measure: rel_auslastung_1 {
+    type: average
+    value_format_name: percent_0
+    sql: ${rel_auslastung} ;;
+    label: "Auslatung"
+  }
+
   dimension: rel_auslastung_2 {
     type: number
     sql: ${TABLE}.REL_AUSLASTUNG_2 ;;
@@ -111,9 +128,9 @@ view: fahrzeugauslastung_kpi {
     type: number
     sql: ${TABLE}.Zielwert ;;
   }
-
-  measure: count {
-    type: count
-    drill_fields: []
+  measure: zielwert_2 {
+    type: average
+    value_format_name: percent_1
+    sql: ${zielwert} ;;
   }
 }
