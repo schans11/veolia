@@ -39,6 +39,7 @@ view: fahrzeugauslastung_kpi {
     WHEN ${fahrzeugtyp} = "Sonstiges" THEN "Sonstiges"
     ELSE "Umleerer" END;;
     label: "Fzg. typ"
+    description: "Put your description here"
   }
 
   dimension: fi_bk_nr {
@@ -65,9 +66,6 @@ view: fahrzeugauslastung_kpi {
   dimension_group: monaten {
     type: time
     timeframes: [
-      raw,
-      date,
-      week,
       month,
       quarter,
       year
@@ -101,6 +99,7 @@ view: fahrzeugauslastung_kpi {
     type: average
     value_format_name: percent_0
     sql: ${rel_auslastung} ;;
+    drill_fields: [monaten_month, fi_region,rel_auslastung_1]
     label: "Auslatung"
   }
 
