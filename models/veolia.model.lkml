@@ -11,3 +11,5 @@ datagroup: veolia_default_datagroup {
 persist_with: veolia_default_datagroup
 
 explore: fahrzeugauslastung_kpi {}
+
+explore: ladungsgewichte {}
