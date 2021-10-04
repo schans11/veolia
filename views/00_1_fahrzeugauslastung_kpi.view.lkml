@@ -91,16 +91,16 @@ view: fahrzeugauslastung_kpi {
   }
 
   dimension: rel_auslastung {
+    hidden: yes
     type: number
     sql: ${TABLE}.REL_AUSLASTUNG ;;
   }
 
-  measure: rel_auslastung_1 {
+  measure: Auslastung {
     type: average
     value_format_name: percent_0
     sql: ${rel_auslastung} ;;
-    drill_fields: [monaten_month, fi_region,rel_auslastung_1]
-    label: "Auslatung"
+    drill_fields: [monaten_month, fi_region,Auslastung]
   }
 
   dimension: rel_auslastung_2 {
