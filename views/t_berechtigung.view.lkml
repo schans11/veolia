@@ -1,5 +1,5 @@
 view: t_berechtigung {
-  sql_table_name: `de-ist-ve-bi.007_Region_Nord.t_Berechtigung`
+  sql_table_name: `de-ist-ve-bi.0015_Region_Nord_View.t_Berechtigung`
     ;;
 
   dimension: bereich {
@@ -45,6 +45,7 @@ view: t_berechtigung {
   dimension: user {
     type: string
     sql: ${TABLE}.User ;;
+
   }
 
   measure: count {
