@@ -15,12 +15,13 @@ explore: fahrzeugauslastung_kpi {}
 
 explore: ladungsgewichte {}
 
-explore: t_berechtigung {
+explore: visibility_limitation {
+  from: t_berechtigung
   join: fahrzeugauslastung_kpi {
     relationship: one_to_many
     type: inner
-    sql_on: ${fahrzeugauslastung_kpi.fi_bk_nr} = ${t_berechtigung.bkrs}
-    and ${t_berechtigung.bereich} = 'Fahrzeugauslastung';;
+    sql_on: ${fahrzeugauslastung_kpi.fi_bk_nr} = ${visibility_limitation.bkrs}
+    and ${visibility_limitation.bereich} = 'Fahrzeugauslastung';;
   }
   sql_always_where: ${user} = "{{ _user_attributes['email'] }}" ;;
 }
