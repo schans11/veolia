@@ -132,7 +132,7 @@ view: vuc_ek_konditionen {
   dimension: subunternehmer {
     type: string
     sql: ${TABLE}.Subunternehmer ;;
-    drill_fields: [auftrag_position,bemerkungszeile,vertragsstatus,abfallgruppe,leistungsart,artikelbezeichnung,vk_containereigner,ek_menge,preis]
+    drill_fields: [subunternehmer_anschrift]
   }
 
   dimension: subunternehmer_anschrift {
