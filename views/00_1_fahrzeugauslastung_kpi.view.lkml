@@ -85,7 +85,7 @@ view: fahrzeugauslastung_kpi {
       year
     ]
     convert_tz: no
-    datatype: date
+    datatype: datetime
     sql: ${TABLE}.Monaten ;;
   }
 
