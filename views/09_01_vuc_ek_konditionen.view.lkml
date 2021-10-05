@@ -1,5 +1,5 @@
 view: vuc_ek_konditionen {
-  sql_table_name: `de-ist-ve-bi.003_VUC.09_01_VUC_EK_Konditionen`
+  sql_table_name: `de-ist-ve-bi.looker_test.09_01_VUC_EK_Konditionen`
     ;;
 
   dimension: abfallgruppe {
