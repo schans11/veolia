@@ -22,4 +22,5 @@ explore: t_berechtigung {
     sql_on: ${fahrzeugauslastung_kpi.fi_bk_nr} = ${t_berechtigung.bkrs}
     and ${t_berechtigung.bereich} = 'Fahrzeugauslastung';;
   }
+  sql_always_where: ${user} = "{{ _user_attributes['email'] }}" ;;
 }
