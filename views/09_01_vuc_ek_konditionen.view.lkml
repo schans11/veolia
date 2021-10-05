@@ -29,6 +29,13 @@ view: vuc_ek_konditionen {
     drill_fields: [artikel,beleg_bezeichnung]
   }
 
+  measure: Auftragspositionen {
+    type: count_distinct
+    value_format_name: decimal_0
+    sql: ${auftrag_position} ;;
+    drill_fields: [auftrag_position,bemerkungszeile,vertragsstatus,abfallgruppe,leistungsart,artikelbezeichnung,vk_containereigner,ek_menge,preis]
+  }
+
   dimension: auftrag {
     type: number
     sql: ${TABLE}.Auftrag ;;
@@ -119,7 +126,7 @@ view: vuc_ek_konditionen {
   dimension: subunternehmer {
     type: string
     sql: ${TABLE}.Subunternehmer ;;
-    drill_fields: [subunternehmer_kz,subunternehmer,subunternehmer_anschrift]
+    drill_fields: [auftrag_position,bemerkungszeile,vertragsstatus,abfallgruppe,leistungsart,artikelbezeichnung,vk_containereigner,ek_menge,preis]
   }
 
   dimension: subunternehmer_anschrift {
