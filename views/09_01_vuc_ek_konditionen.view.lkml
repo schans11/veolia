@@ -33,7 +33,7 @@ view: vuc_ek_konditionen {
     type: count_distinct
     value_format_name: decimal_0
     sql: ${anfallstelle} ;;
-    drill_fields: [auftrag_position,bemerkungszeile,vertragsstatus,abfallgruppe,leistungsart,artikelbezeichnung,vk_containereigner,ek_menge,preis]
+    drill_fields: [anfallstelle,Auftragspositionen]
   }
   measure: Auftragspositionen {
     type: count_distinct
