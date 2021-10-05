@@ -23,5 +23,5 @@ explore: visibility_limitation {
     sql_on: ${fahrzeugauslastung_kpi.fi_bk_nr} = ${visibility_limitation.bkrs}
     and ${visibility_limitation.bereich} = 'Fahrzeugauslastung';;
   }
-  sql_always_where: ${user} = "{{ _user_attributes['email'] }}" ;;
+  ##sql_always_where: ${user} = "{{ _user_attributes['email'] }}" ;;
 }
