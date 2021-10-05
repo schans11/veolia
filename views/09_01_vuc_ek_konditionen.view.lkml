@@ -1,4 +1,4 @@
-view: 09_01_vuc_ek_konditionen {
+view: vuc_ek_konditionen {
   sql_table_name: `de-ist-ve-bi.003_VUC.09_01_VUC_EK_Konditionen`
     ;;
 
