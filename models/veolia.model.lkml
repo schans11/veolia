@@ -13,3 +13,12 @@ persist_with: veolia_default_datagroup
 explore: fahrzeugauslastung_kpi {}
 
 explore: ladungsgewichte {}
+
+explore: t_berechtigung {
+  join: fahrzeugauslastung_kpi {
+    relationship: one_to_many
+    type: inner
+    sql: ${fahrzeugauslastung_kpi.fi_bk_nr} = ${t_berechtigung.bkrs}
+    and ${t_berechtigung.bereich} = 'Fahrzeugauslastung';;
+  }
+}
