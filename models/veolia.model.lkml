@@ -25,3 +25,13 @@ explore: visibility_limitation {
   }
   ##sql_always_where: ${user} = "{{ _user_attributes['email'] }}" ;;
 }
+
+explore: visibility_limitation_2 {
+  from: email_recipient
+  join: fahrzeugauslastung_kpi {
+    relationship: one_to_many
+    type: left_outer
+    sql_on: ${fahrzeugauslastung_kpi.niederlasting_adjusted} = ${visibility_limitation_2.niederlassung} ;;
+  }
+  sql_always_where: ${responsible} = "{{ _user_attributes['email'] }}"  ;;
+}

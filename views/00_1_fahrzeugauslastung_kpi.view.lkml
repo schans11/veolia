@@ -94,6 +94,16 @@ view: fahrzeugauslastung_kpi {
     sql: ${TABLE}.Niederlassung ;;
   }
 
+  dimension: niederlasting_adjusted {
+    type: string
+    sql: case when ${niederlassung} = "Berlin" then "Berlin"
+          when ${niederlassung} = "Sachsen" then "Sachsen"
+          when ${niederlassung} = "Franken" then "Franken"
+          else "Others" end;;
+  }
+
+
+
   dimension: profitcenter {
     type: string
     sql: ${TABLE}.PROFITCENTER ;;
