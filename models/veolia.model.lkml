@@ -14,6 +14,7 @@ persist_with: veolia_default_datagroup
 explore: fahrzeugauslastung_kpi {}
 
 explore: ladungsgewichte {}
+explore: vuc_ek_konditionen {}
 
 explore: visibility_limitation {
   from: t_berechtigung
