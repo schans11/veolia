@@ -1,5 +1,5 @@
 view: t_berechtigung {
-  sql_table_name: `de-ist-ve-bi.0015_Region_Nord_View.t_Berechtigung`
+  sql_table_name: `de-ist-ve-bi.looker_test.t_Berechtigung`
     ;;
 
   dimension: bereich {

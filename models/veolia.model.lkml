@@ -34,5 +34,5 @@ explore: visibility_limitation_2 {
     type: left_outer
     sql_on: ${fahrzeugauslastung_kpi.niederlasting_adjusted} = ${visibility_limitation_2.niederlassung} ;;
   }
-  sql_always_where: ${responsible} = "{{ _user_attributes['email'] }}"  ;;
+ ## sql_always_where: ${responsible} = "{{ _user_attributes['email'] }}"  ;;
 }
