@@ -28,7 +28,7 @@ view: fahrzeugauslastung_kpi {
     type: average
     value_format_name: percent_0
     sql: ${rel_auslastung} ;;
-    drill_fields: [monaten_month, fi_region,Auslastung]
+    drill_fields: [fi_region, niederlassung, Auslastung]
   }
 
 
