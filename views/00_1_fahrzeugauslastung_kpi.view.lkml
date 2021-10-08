@@ -31,6 +31,13 @@ view: fahrzeugauslastung_kpi {
     drill_fields: [fi_region, niederlassung, Auslastung]
   }
 
+  measure: Auslastung_min {
+    type: min
+    value_format_name: percent_0
+    sql: ${rel_auslastung} ;;
+    drill_fields: [fi_region, niederlassung, Auslastung]
+  }
+
 
   dimension: anzahl_behaelter {
     type: number
@@ -120,6 +127,13 @@ view: fahrzeugauslastung_kpi {
     sql: ${TABLE}.REL_AUSLASTUNG ;;
   }
 
+  measure: zielx {
+    value_format_name: percent_0
+    sql: ${Auslastung}-${zielwert_2};;
+
+
+  }
+
   dimension: rel_auslastung_2 {
     type: number
     sql: ${TABLE}.REL_AUSLASTUNG_2 ;;
@@ -145,4 +159,40 @@ view: fahrzeugauslastung_kpi {
     sql: ${TABLE}.Zielwert ;;
   }
 
+}
+
+view: auslastung_month_niederlassung {
+  derived_table: {
+    explore_source: fahrzeugauslastung_kpi {
+      column: Auslastung {}
+      column: niederlassung {}
+      column: monaten_month {}
+      filters: {
+        field: fahrzeugauslastung_kpi.fahrzeugtyp_2
+        value: "-Sonstiges"
+      }
+    }
+  }
+  dimension: Auslastung {
+    hidden: yes
+    value_format: "#,##0%"
+    type: number
+  }
+  dimension: niederlassung {
+    hidden: yes
+  }
+  dimension: monaten_month {
+    hidden: yes
+    type: date_month
+  }
+  measure: auslastung_min {
+    type: min
+    sql: ${Auslastung};;
+    value_format_name: percent_0
+  }
+  measure: auslastung_max {
+    type: max
+    sql: ${Auslastung};;
+    value_format_name: percent_0
+  }
 }

@@ -11,7 +11,13 @@ datagroup: veolia_default_datagroup {
 
 persist_with: veolia_default_datagroup
 
-explore: fahrzeugauslastung_kpi {}
+explore: fahrzeugauslastung_kpi {
+  join: auslastung_month_niederlassung {
+    type: inner
+    relationship: many_to_one
+    sql_on: ${fahrzeugauslastung_kpi.niederlassung} = ${auslastung_month_niederlassung.niederlassung} ;;
+  }
+}
 
 explore: ladungsgewichte {}
 explore: vuc_ek_konditionen {}
