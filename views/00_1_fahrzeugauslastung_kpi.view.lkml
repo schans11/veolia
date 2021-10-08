@@ -31,13 +31,13 @@ view: fahrzeugauslastung_kpi {
     drill_fields: [fi_region, niederlassung, Auslastung]
   }
 
-  measure: Auslastung_min {
-    type: min
+  measure: Auslastung_last_month {
+    type: average
     value_format_name: percent_0
+    filters: [monaten_month: "2 months ago for 2 months"]
     sql: ${rel_auslastung} ;;
     drill_fields: [fi_region, niederlassung, Auslastung]
   }
-
 
   dimension: anzahl_behaelter {
     type: number
