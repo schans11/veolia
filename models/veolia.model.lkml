@@ -13,7 +13,7 @@ persist_with: veolia_default_datagroup
 
 explore: fahrzeugauslastung_kpi {}
 
-
+explore: report {}
 
 
 
@@ -60,5 +60,10 @@ explore: auslastung_6month_niederlassung {
     type: left_outer
     relationship: one_to_many
     sql_on: ${auslastung_6month_niederlassung.niederlassung} = ${auslastung_month_niederlassung.niederlassung} ;;
+  }
+  join: email_recipient {
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${email_recipient.niederlassung} = ${auslastung_6month_niederlassung.niederlassung} ;;
   }
 }

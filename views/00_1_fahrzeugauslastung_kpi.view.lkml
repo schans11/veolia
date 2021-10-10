@@ -31,6 +31,16 @@ view: fahrzeugauslastung_kpi {
     drill_fields: [fi_region, niederlassung, Auslastung]
   }
 
+  measure: Auslastung_link {
+    type: average
+    value_format_name: percent_0
+    sql: ${rel_auslastung} ;;
+      link: {
+        label: "Details"
+        url: "https://veoliagermany.cloud.looker.com/looks/10"
+      }
+    }
+
   measure: Auslastung_last_month {
     type: average
     value_format_name: percent_0
@@ -215,6 +225,9 @@ view: auslastung_6month_niederlassung {
   }
 }
 
+
+
+
 view: report {
   derived_table: {
     explore_source: auslastung_6month_niederlassung {
@@ -225,9 +238,13 @@ view: report {
       column: zielwert_avg {}
       column: auslastung_max { field: auslastung_month_niederlassung.auslastung_max }
       column: auslastung_min { field: auslastung_month_niederlassung.auslastung_min }
+      column: threshold { field: email_recipient.threshold}
+      column: responsible {field: email_recipient.responsible}
     }
   }
   dimension: niederlassung {}
+  dimension: threshold {  }
+  dimension: responsible {}
   dimension: Auslastung_6_month_average {
     sql: auslastung ;;
     value_format: "#,##0%"
@@ -290,6 +307,8 @@ view: report {
       <p style="background-color: lightgreen">{{ rendered_value }}</p>
     {% endif %} ;;
   }
+  dimension: alert_to_sent{
+    type: string
+    sql: case when ${threshold} > 0.0001 then 'Alert' else 'no alert' end;;
+  }
 }
-
-explore: report {}

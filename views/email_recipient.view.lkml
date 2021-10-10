@@ -12,6 +12,10 @@ view: email_recipient {
     sql: ${TABLE}.Responsible ;;
   }
 
+  dimension: threshold {
+    type: number
+    sql:${TABLE}.Threshold ;;
+  }
   measure: count {
     type: count
     drill_fields: []
