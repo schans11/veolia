@@ -37,7 +37,7 @@ view: fahrzeugauslastung_kpi {
     sql: ${rel_auslastung} ;;
       link: {
         label: "Details"
-        url: "https://veoliagermany.cloud.looker.com/looks/10"
+        url: "https://veoliagermany.cloud.looker.com/looks/11"
       }
     }
 
