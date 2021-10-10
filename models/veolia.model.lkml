@@ -11,13 +11,11 @@ datagroup: veolia_default_datagroup {
 
 persist_with: veolia_default_datagroup
 
-explore: fahrzeugauslastung_kpi {
-  join: auslastung_month_niederlassung {
-    type: inner
-    relationship: many_to_one
-    sql_on: ${fahrzeugauslastung_kpi.niederlassung} = ${auslastung_month_niederlassung.niederlassung} ;;
-  }
-}
+explore: fahrzeugauslastung_kpi {}
+
+
+
+
 
 explore: ladungsgewichte {}
 explore: vuc_ek_konditionen {}
@@ -41,4 +39,26 @@ explore: visibility_limitation_2 {
     sql_on: ${fahrzeugauslastung_kpi.niederlasting_adjusted} = ${visibility_limitation_2.niederlassung} ;;
   }
   sql_always_where: ${responsible} = "{{ _user_attributes['email'] }}"  ;;
+}
+
+explore: auslastung_6month_niederlassung {
+  join: auslastung_last_month_niederlassung {
+    type: left_outer
+    relationship: many_to_one
+    from: auslastung_month_niederlassung
+    sql_on: ${auslastung_last_month_niederlassung.ranking} = 1
+      and ${auslastung_last_month_niederlassung.niederlassung} = ${auslastung_6month_niederlassung.niederlassung};;
+  }
+  join: auslastung_2_months_back_niederlassung {
+    type: left_outer
+    relationship: many_to_one
+    from: auslastung_month_niederlassung
+    sql_on: ${auslastung_2_months_back_niederlassung.ranking} = 2
+      and ${auslastung_2_months_back_niederlassung.niederlassung} = ${auslastung_6month_niederlassung.niederlassung};;
+  }
+  join: auslastung_month_niederlassung {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${auslastung_6month_niederlassung.niederlassung} = ${auslastung_month_niederlassung.niederlassung} ;;
+  }
 }

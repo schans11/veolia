@@ -18,7 +18,7 @@ view: fahrzeugauslastung_kpi {
     label: "Region"
   }
 
-  measure: zielwert_2 {
+  measure: zielwert_avg {
     type: average
     value_format_name: percent_1
     sql: ${zielwert} ;;
@@ -34,7 +34,6 @@ view: fahrzeugauslastung_kpi {
   measure: Auslastung_last_month {
     type: average
     value_format_name: percent_0
-    filters: [monaten_month: "2 months ago for 2 months"]
     sql: ${rel_auslastung} ;;
     drill_fields: [fi_region, niederlassung, Auslastung]
   }
@@ -87,6 +86,7 @@ view: fahrzeugauslastung_kpi {
   dimension_group: monaten {
     type: time
     timeframes: [
+      date,
       month,
       quarter,
       year
@@ -127,12 +127,10 @@ view: fahrzeugauslastung_kpi {
     sql: ${TABLE}.REL_AUSLASTUNG ;;
   }
 
-  measure: zielx {
-    value_format_name: percent_0
-    sql: ${Auslastung}-${zielwert_2};;
-
-
-  }
+#  measure: zielx {
+#    value_format_name: percent_0
+#    sql: ${Auslastung}-${zielwert_2};;
+#  }
 
   dimension: rel_auslastung_2 {
     type: number
@@ -161,38 +159,137 @@ view: fahrzeugauslastung_kpi {
 
 }
 
+
+
 view: auslastung_month_niederlassung {
   derived_table: {
     explore_source: fahrzeugauslastung_kpi {
-      column: Auslastung {}
       column: niederlassung {}
+      column: Auslastung {}
       column: monaten_month {}
-      filters: {
-        field: fahrzeugauslastung_kpi.fahrzeugtyp_2
-        value: "-Sonstiges"
-      }
+      derived_column: ranking {sql: ROW_NUMBER () OVER (PARTITION BY niederlassung order by monaten_month desc );;}
     }
   }
+  dimension: niederlassung {}
+  dimension: ranking {
+
+    type: number
+  }
   dimension: Auslastung {
-    hidden: yes
     value_format: "#,##0%"
     type: number
   }
-  dimension: niederlassung {
-    hidden: yes
-  }
   dimension: monaten_month {
-    hidden: yes
     type: date_month
   }
   measure: auslastung_min {
     type: min
     sql: ${Auslastung};;
     value_format_name: percent_0
+    html: <p style="color: #FF7F7F">{{ rendered_value }}</p> ;;
   }
   measure: auslastung_max {
     type: max
     sql: ${Auslastung};;
     value_format_name: percent_0
+    html: <p style="color: #90EE90">{{ rendered_value }}</p> ;;
   }
 }
+
+view: auslastung_6month_niederlassung {
+  derived_table: {
+    explore_source: fahrzeugauslastung_kpi {
+      column: niederlassung {}
+      column: Auslastung {}
+      column: zielwert_avg {}
+    }
+  }
+  dimension: niederlassung {}
+  dimension: Auslastung {
+    value_format: "#,##0%"
+    type: number
+  }
+  dimension: zielwert_avg {
+    value_format: "#,##0.0%"
+    type: number
+  }
+}
+
+view: report {
+  derived_table: {
+    explore_source: auslastung_6month_niederlassung {
+      column: niederlassung { field: auslastung_last_month_niederlassung.niederlassung }
+      column: Auslastung {}
+      column: Auslastung_last_month { field: auslastung_last_month_niederlassung.Auslastung }
+      column: Auslastung_2_months_back { field: auslastung_2_months_back_niederlassung.Auslastung }
+      column: zielwert_avg {}
+      column: auslastung_max { field: auslastung_month_niederlassung.auslastung_max }
+      column: auslastung_min { field: auslastung_month_niederlassung.auslastung_min }
+    }
+  }
+  dimension: niederlassung {}
+  dimension: Auslastung_6_month_average {
+    sql: auslastung ;;
+    value_format: "#,##0%"
+    type: number
+  }
+  dimension: Auslastung_last_month {
+    value_format: "#,##0%"
+    type: number
+  }
+  dimension: Auslastung_2_months_back {
+    value_format: "#,##0%"
+    type: number
+  }
+  dimension: zielwert_avg {
+    value_format: "#,##0.0%"
+    type: number
+  }
+  dimension: auslastung_max {
+    value_format: "#,##0%"
+    type: number
+  }
+  dimension: auslastung_min {
+    value_format: "#,##0%"
+    type: number
+  }
+  dimension: auslastung_performance_last_month {
+    type: string
+    sql: case when ${Auslastung_last_month} > ${Auslastung_2_months_back} then 'improving last month' else 'deteriorating last month' end ;;
+    html: {% if value == 'deteriorating last month' %}
+    <p style="background-color: #FF7F7F">{{ rendered_value }}</p>
+    {% elsif value == 'improving last month' %}
+    <p style="background-color: lightgreen">{{ rendered_value }}</p>
+    {% endif %} ;;
+  }
+  dimension: ziel_last_month {
+    type: string
+    sql: case when ${Auslastung_last_month} > ${zielwert_avg} then 'above target last month' else 'below target last month' end ;;
+    html: {% if value == 'below target last month' %}
+    <p style="background-color: #FF7F7F">{{ rendered_value }}</p>
+    {% elsif value == 'above target last month' %}
+    <p style="background-color: lightgreen">{{ rendered_value }}</p>
+    {% endif %} ;;
+  }
+  dimension: high_low {
+    type: string
+    sql: case when ${auslastung_max} = ${Auslastung_last_month} then 'Last month highest in six months'
+    else case when ${auslastung_min} = ${Auslastung_last_month} then 'Last month lowest in six months' else '' end end ;;
+    html: {% if value == 'Last month lowest in six months' %}
+    <p style="background-color: #FF7F7F">{{ rendered_value }}</p>
+    {% elsif value == 'Last month highest in six months' %}
+    <p style="background-color: lightgreen">{{ rendered_value }}</p>
+    {% endif %} ;;
+  }
+  dimension: 6months {
+    type: string
+    sql: case when ${Auslastung_6_month_average} > ${Auslastung_last_month} then 'Last month below 6 month average' else 'Last month above 6 month average' end ;;
+    html: {% if value == 'Last month below 6 month average' %}
+      <p style="background-color: #FF7F7F">{{ rendered_value }}</p>
+    {% elsif value == 'Last month above 6 month average' %}
+      <p style="background-color: lightgreen">{{ rendered_value }}</p>
+    {% endif %} ;;
+  }
+}
+
+explore: report {}
