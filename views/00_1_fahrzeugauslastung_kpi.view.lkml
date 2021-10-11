@@ -115,7 +115,7 @@ view: fahrzeugauslastung_kpi {
     sql: ${TABLE}.Niederlassung ;;
   }
 
-  dimension: niederlasting_adjusted {
+  dimension: niederlassung_adjusted {
     type: string
     sql: case when ${niederlassung} = "Berlin" then "Berlin"
           when ${niederlassung} = "Sachsen" then "Sachsen"
@@ -207,11 +207,16 @@ view: auslastung_6month_niederlassung {
   derived_table: {
     explore_source: fahrzeugauslastung_kpi {
       column: niederlassung {}
+      column: niederlassung_adjusted {}
       column: Auslastung {}
       column: zielwert_avg {}
     }
   }
   dimension: niederlassung {}
+  dimension: niederlassung_adjusted {
+    hidden: yes
+    type: string
+  }
   dimension: Auslastung {
     value_format: "#,##0%"
     type: number
@@ -248,7 +253,7 @@ explore: auslastung_6month_niederlassung {
   join: email_recipient {
     type: left_outer
     relationship: one_to_one
-    sql_on: ${email_recipient.niederlassung} = ${auslastung_6month_niederlassung.niederlassung} ;;
+    sql_on: ${email_recipient.niederlassung} = ${auslastung_6month_niederlassung.niederlassung_adjusted} ;;
   }
 }
 

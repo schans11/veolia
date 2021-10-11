@@ -26,7 +26,7 @@ explore: visibility_limitation_2 {
   join: fahrzeugauslastung_kpi {
     relationship: one_to_many
     type: left_outer
-    sql_on: ${fahrzeugauslastung_kpi.niederlasting_adjusted} = ${visibility_limitation_2.niederlassung} ;;
+    sql_on: ${fahrzeugauslastung_kpi.niederlassung_adjusted} = ${visibility_limitation_2.niederlassung} ;;
   }
   sql_always_where: ${responsible} = "{{ _user_attributes['email'] }}"  ;;
 }
