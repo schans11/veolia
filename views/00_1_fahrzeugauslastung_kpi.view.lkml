@@ -117,8 +117,8 @@ view: fahrzeugauslastung_kpi {
 
   dimension: niederlassung_adjusted {
     type: string
-    sql: case when ${niederlassung} = "Berlin" then "Berlin"
-          when ${niederlassung} = "Sachsen" then "Sachsen"
+    sql: case when ${niederlassung} = "Baden-Württemberg" then "Baden-Württemberg"
+          when ${niederlassung} = "Süd-Bayern" then "Süd-Bayern"
           when ${niederlassung} = "Franken" then "Franken"
           else "Others" end;;
   }
