@@ -15,7 +15,7 @@ explore: fahrzeugauslastung_kpi {}
 
 explore: ladungsgewichte {}
 explore: vuc_ek_konditionen {}
-
+explore: frachtbeauftragungen_u_kosten {}
 
 #<<<<<<< HEAD
 #=======
