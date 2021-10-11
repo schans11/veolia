@@ -3,25 +3,11 @@ connection: "veolia"
 # include all the views
 include: "/views/**/*.view"
 
-datagroup: veolia_default_datagroup {
-  # sql_trigger: SELECT MAX(id) FROM etl_log;;
-  max_cache_age: "1 hour"
+datagroup: veolia_new_month {
+  sql_trigger: SELECT max(monaten) FROM de-ist-ve-bi.looker_test.00_1_Fahrzeugauslastung_KPI;;
 }
-###
-
-persist_with: veolia_default_datagroup
 
 explore: fahrzeugauslastung_kpi {}
-
-explore: ladungsgewichte {
-  group_label: "2. Philip"
-}
-explore: vuc_ek_konditionen {
-  group_label: "2. Philip"
-}
-explore: frachtbeauftragungen_u_kosten {
-  group_label: "2. Philip"
-}
 
 explore: visibility_limitation_1 {
   hidden: yes
@@ -43,4 +29,14 @@ explore: visibility_limitation_2 {
     sql_on: ${fahrzeugauslastung_kpi.niederlasting_adjusted} = ${visibility_limitation_2.niederlassung} ;;
   }
   sql_always_where: ${responsible} = "{{ _user_attributes['email'] }}"  ;;
+}
+
+explore: ladungsgewichte {
+  group_label: "2. Philip"
+}
+explore: vuc_ek_konditionen {
+  group_label: "2. Philip"
+}
+explore: frachtbeauftragungen_u_kosten {
+  group_label: "2. Philip"
 }
