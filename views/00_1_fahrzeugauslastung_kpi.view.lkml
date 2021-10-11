@@ -1,3 +1,7 @@
+include: "/views/**/*.view"
+
+#step 1.1
+
 view: fahrzeugauslastung_kpi {
   sql_table_name: `looker_test.00_1_Fahrzeugauslastung_KPI`
     ;;
@@ -119,8 +123,6 @@ view: fahrzeugauslastung_kpi {
           else "Others" end;;
   }
 
-
-
   dimension: profitcenter {
     type: string
     sql: ${TABLE}.PROFITCENTER ;;
@@ -166,10 +168,9 @@ view: fahrzeugauslastung_kpi {
     type: number
     sql: ${TABLE}.Zielwert ;;
   }
-
 }
 
-
+#step 1.2
 
 view: auslastung_month_niederlassung {
   derived_table: {
@@ -180,9 +181,10 @@ view: auslastung_month_niederlassung {
       derived_column: ranking {sql: ROW_NUMBER () OVER (PARTITION BY niederlassung order by monaten_month desc );;}
     }
   }
-  dimension: niederlassung {}
+  dimension: niederlassung {
+    type: string
+  }
   dimension: ranking {
-
     type: number
   }
   dimension: Auslastung {
@@ -196,15 +198,15 @@ view: auslastung_month_niederlassung {
     type: min
     sql: ${Auslastung};;
     value_format_name: percent_0
-    html: <p style="color: #FF7F7F">{{ rendered_value }}</p> ;;
   }
   measure: auslastung_max {
     type: max
     sql: ${Auslastung};;
     value_format_name: percent_0
-    html: <p style="color: #90EE90">{{ rendered_value }}</p> ;;
   }
 }
+
+#step 1.3
 
 view: auslastung_6month_niederlassung {
   derived_table: {
@@ -225,8 +227,37 @@ view: auslastung_6month_niederlassung {
   }
 }
 
+#step 1.4
 
+explore: auslastung_6month_niederlassung {
+  hidden: yes
+  join: auslastung_last_month_niederlassung {
+    type: left_outer
+    relationship: many_to_one
+    from: auslastung_month_niederlassung
+    sql_on: ${auslastung_last_month_niederlassung.ranking} = 1
+      and ${auslastung_last_month_niederlassung.niederlassung} = ${auslastung_6month_niederlassung.niederlassung};;
+  }
+  join: auslastung_2_months_back_niederlassung {
+    type: left_outer
+    relationship: many_to_one
+    from: auslastung_month_niederlassung
+    sql_on: ${auslastung_2_months_back_niederlassung.ranking} = 2
+      and ${auslastung_2_months_back_niederlassung.niederlassung} = ${auslastung_6month_niederlassung.niederlassung};;
+  }
+  join: auslastung_month_niederlassung {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${auslastung_6month_niederlassung.niederlassung} = ${auslastung_month_niederlassung.niederlassung} ;;
+  }
+  join: email_recipient {
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${email_recipient.niederlassung} = ${auslastung_6month_niederlassung.niederlassung} ;;
+  }
+}
 
+#step 1.5
 
 view: report {
   derived_table: {
@@ -265,10 +296,12 @@ view: report {
   dimension: auslastung_max {
     value_format: "#,##0%"
     type: number
+    html: <p style="color: #90EE90">{{ rendered_value }}</p> ;;
   }
   dimension: auslastung_min {
     value_format: "#,##0%"
     type: number
+    html: <p style="color: #FF7F7F">{{ rendered_value }}</p> ;;
   }
   dimension: auslastung_performance_last_month {
     type: string
@@ -312,3 +345,7 @@ view: report {
     sql: case when ${threshold} > 0.0001 then 'Alert' else 'no alert' end;;
   }
 }
+
+#step 1.6
+
+explore: report {}
