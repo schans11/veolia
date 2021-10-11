@@ -22,15 +22,12 @@ view: frachtbeauftragungen_u_kosten {
     sql: ${TABLE}.Ladeort_Kz ;;
   }
 
-  dimension: ladeort_lat {
-    type: number
-    sql: ${TABLE}.Ladeort_Lat ;;
+  dimension: Ladeort_Location {
+    type: location
+    sql_latitude: ${TABLE}.Ladeort_Lat ;;
+    sql_longitude: ${TABLE}.Ladeort_Long ;;
   }
 
-  dimension: ladeort_long {
-    type: number
-    sql: ${TABLE}.Ladeort_Long ;;
-  }
 
   dimension: ladeort_ort {
     type: string
@@ -61,15 +58,11 @@ view: frachtbeauftragungen_u_kosten {
     sql: ${TABLE}.Lieferort_Kz ;;
   }
 
-  dimension: lieferort_lat {
-    type: number
-    sql: ${TABLE}.Lieferort_Lat ;;
-  }
-
-  dimension: lieferort_long {
-    type: number
-    sql: ${TABLE}.Lieferort_Long ;;
-  }
+  dimension: Lieferort_Location {
+    type: location
+    sql_latitude: ${TABLE}.Lieferort_Lat ;;
+    sql_longitude: ${TABLE}.Lieferort_Long ;;
+      }
 
   dimension: lieferort_ort {
     type: string
