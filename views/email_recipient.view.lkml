@@ -14,7 +14,7 @@ view: email_recipient {
 
   dimension: threshold {
     type: number
-    sql:${TABLE}.Threshold ;;
+    sql: cast(${TABLE}.Threshold as numeric) ;;
   }
   measure: count {
     type: count

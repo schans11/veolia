@@ -19,6 +19,7 @@ view: fahrzeugauslastung_kpi {
   dimension: fi_region {
     type: string
     sql: ${TABLE}.fi_region ;;
+    description: "Test"
     label: "Region"
   }
 
@@ -273,8 +274,12 @@ view: report {
       column: responsible {field: email_recipient.responsible}
     }
   }
-  dimension: niederlassung {}
-  dimension: threshold {  }
+  dimension: niederlassung {
+  }
+  dimension: threshold {
+    type: number
+    ##value_format_name: percent_1
+  }
   dimension: responsible {}
   dimension: Auslastung_6_month_average {
     sql: auslastung ;;
@@ -305,11 +310,15 @@ view: report {
   }
   dimension: auslastung_performance_last_month {
     type: string
-    sql: case when ${Auslastung_last_month} > ${Auslastung_2_months_back} then 'improving last month' else 'deteriorating last month' end ;;
+    sql: case when ${Auslastung_last_month} > 0.0001 then
+    case when ${Auslastung_last_month} > ${Auslastung_2_months_back} then 'improving last month' else 'deteriorating last month' end
+    else 'Not applicable' end;;
     html: {% if value == 'deteriorating last month' %}
     <p style="background-color: #FF7F7F">{{ rendered_value }}</p>
     {% elsif value == 'improving last month' %}
     <p style="background-color: lightgreen">{{ rendered_value }}</p>
+            {% elsif value == 'Not applicable' %}
+    <p style="background-color: #ADD8E6">{{ rendered_value }}</p>
     {% endif %} ;;
   }
   dimension: ziel_last_month {
@@ -342,14 +351,14 @@ view: report {
   }
   dimension: alert_to_sent{
     type: string
-    sql: case when ${threshold} > 0.0001 then
-    case when ${threshold} > ${Auslastung_last_month} then 'No alert to be sent' else 'Alert to be sent' end
-    else 'No alert set' end;;
+    sql: case when ${Auslastung_last_month} > 0.0001 then
+    case when ${threshold} > ${Auslastung_last_month} then 'Alert to be sent' else 'No alert to be sent' end
+    else 'Not applicable' end;;
     html: {% if value == 'Alert to be sent' %}
     <p style="background-color: #FF7F7F">{{ rendered_value }}</p>
     {% elsif value == 'No alert to be sent' %}
     <p style="background-color: lightgreen">{{ rendered_value }}</p>
-        {% elsif value == 'No alert set' %}
+        {% elsif value == 'Not applicable' %}
     <p style="background-color: #ADD8E6">{{ rendered_value }}</p>
     {% endif %} ;;
   }
