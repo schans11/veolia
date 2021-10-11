@@ -337,10 +337,21 @@ view: report {
   }
   dimension: alert_to_sent{
     type: string
-    sql: case when ${threshold} > 0.0001 then 'Alert' else 'no alert' end;;
+    sql: case when ${threshold} > 0.0001 then
+    case when ${threshold} > ${Auslastung_last_month} then 'No alert to be sent' else 'Alert to be sent' end
+    else 'No alert set' end;;
+    html: {% if value == 'Alert to be sent' %}
+    <p style="background-color: #FF7F7F">{{ rendered_value }}</p>
+    {% elsif value == 'No alert to be sent' %}
+    <p style="background-color: lightgreen">{{ rendered_value }}</p>
+        {% elsif value == 'No alert set' %}
+    <p style="background-color: #ADD8E6">{{ rendered_value }}</p>
+    {% endif %} ;;
   }
 }
 
 #step 1.6
 
-explore: report {}
+explore: report {
+  hidden: yes
+}
