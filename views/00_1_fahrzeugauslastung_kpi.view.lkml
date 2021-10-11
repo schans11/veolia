@@ -139,11 +139,6 @@ view: fahrzeugauslastung_kpi {
     sql: ${TABLE}.REL_AUSLASTUNG ;;
   }
 
-#  measure: zielx {
-#    value_format_name: percent_0
-#    sql: ${Auslastung}-${zielwert_2};;
-#  }
-
   dimension: rel_auslastung_2 {
     type: number
     sql: ${TABLE}.REL_AUSLASTUNG_2 ;;

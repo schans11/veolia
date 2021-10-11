@@ -13,22 +13,29 @@ persist_with: veolia_default_datagroup
 
 explore: fahrzeugauslastung_kpi {}
 
-explore: ladungsgewichte {}
-explore: vuc_ek_konditionen {}
-explore: frachtbeauftragungen_u_kosten {}
+explore: ladungsgewichte {
+  group_label: "2. Philip"
+}
+explore: vuc_ek_konditionen {
+  group_label: "2. Philip"
+}
+explore: frachtbeauftragungen_u_kosten {
+  group_label: "2. Philip"
+}
 
-explore: visibility_limitation {
+explore: visibility_limitation_1 {
+  hidden: yes
   from: t_berechtigung
   join: fahrzeugauslastung_kpi {
     relationship: one_to_many
     type: inner
-    sql_on: ${fahrzeugauslastung_kpi.fi_bk_nr} = ${visibility_limitation.bkrs}
-    and ${visibility_limitation.bereich} = 'Fahrzeugauslastung';;
+    sql_on: ${fahrzeugauslastung_kpi.fi_bk_nr} = ${visibility_limitation_1.bkrs}
+    and ${visibility_limitation_1.bereich} = 'Fahrzeugauslastung';;
   }
-  ##sql_always_where: ${user} = "{{ _user_attributes['email'] }}" ;;
 }
 
 explore: visibility_limitation_2 {
+  hidden: yes
   from: email_recipient
   join: fahrzeugauslastung_kpi {
     relationship: one_to_many
