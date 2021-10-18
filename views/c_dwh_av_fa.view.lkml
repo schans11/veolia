@@ -755,8 +755,6 @@ explore: haupttabelle_2 {
   }
 }
 
-explore: auslastung_kpi_gs {}
-
 view: haupttabelle_2 {
   derived_table: {
     explore_source: haupttabelle_2 {
