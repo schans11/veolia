@@ -743,80 +743,105 @@ explore: haupttabelle_2 {
   }
   join: c_dwh_navigator_sapkosten {
     type: left_outer
-    relationship: one_to_many
+    relationship: one_to_one
     sql_on: ${c_dwh_navigator_sapkosten.innenauftrag} = ${haupttabelle_2.fa_fzg_sap_code}
     and ${c_dwh_navigator_sapkosten.monat} = ${haupttabelle_2.fa_ausf_month_num}
     and ${c_dwh_navigator_sapkosten.jahr} = ${haupttabelle_2.fa_ausf_year};;
   }
-
+  join: auslastung_kpi_gs {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${c_dwh_navigator_fahrzeuge.niederlassung_adjusted} = ${auslastung_kpi_gs.niederlassung} ;;
+  }
 }
+
+explore: auslastung_kpi_gs {}
 
 view: haupttabelle_2 {
   derived_table: {
     explore_source: haupttabelle_2 {
+      column: Subfahrzeug {}
       column: fa_ausf_month {}
-      column: fi_region {}
       column: fi_bk_nr {}
-      column: fa_fzg_sap_code {}
+      column: fi_region {}
       column: fa_fzg_klasse {}
+      column: fa_fzg_sap_code {}
+      column: IST_AT_MONAT {}
+      column: kostenstelle_beschreibung { field: c_dwh_navigator_fahrzeuge.kostenstelle_beschreibung }
+      column: min_gefahren_monat {}
+      column: std_gefahren_monat {}
       column: profitcenter { field: c_dwh_navigator_fahrzeuge.profitcenter }
       column: profitcenter_bezeichnung { field: c_dwh_navigator_fahrzeuge.profitcenter_bezeichnung }
-      column: kostenstelle_beschreibung { field: c_dwh_navigator_fahrzeuge.kostenstelle_beschreibung }
-      column: reparaturkostengesamt { field: c_dwh_navigator_sapkosten.reparaturkostengesamt }
-      column: niederlassung_adjusted { field: c_dwh_navigator_fahrzeuge.niederlassung_adjusted}
-      column: erstzulassung_date { field: c_dwh_navigator_fahrzeuge.erstzulassung_date }
-      column: IST_AT_MONAT {}
-      column: min_gefahren_monat {}
-      column: SOLL_AT_MONAT { field: AT_MONATE.SOLL_AT_MONAT }
-      column: std_gefahren_monat {}
-      column: Anzal_behaelter {}
       column: Anzal_behaelter_sum {}
+      column: ask { field: auslastung_kpi_gs.ask }
+      column: gab { field: auslastung_kpi_gs.gab }
+      column: umleerer { field: auslastung_kpi_gs.umleerer }
+      column: sonstiges { field: auslastung_kpi_gs.sonstiges }
+      column: niederlassung_adjusted { field: c_dwh_navigator_fahrzeuge.niederlassung_adjusted }
+      column: erstzulassung_date { field: c_dwh_navigator_fahrzeuge.erstzulassung_date }
+      column: reparaturkostengesamt { field: c_dwh_navigator_sapkosten.reparaturkostengesamt }
+      column: SOLL_AT_MONAT { field: AT_MONATE.SOLL_AT_MONAT }
+      filters: {
+        field: c_dwh_navigator_fahrzeuge.profitcenter
+        value: "JA11"
+      }
+      filters: {
+        field: haupttabelle_2.Subfahrzeug
+        value: "Eigene Fahrzeug"
+      }
+      filters: {
+        field: haupttabelle_2.fa_ausf_date
+        value: "2021/06/22"
+      }
     }
   }
-  dimension: niederlassung_adjusted {}
+  dimension: Subfahrzeug {}
   dimension: fa_ausf_month {
     type: date_month
   }
-  dimension: fi_region {}
   dimension: fi_bk_nr {
     type: number
   }
+  dimension: fi_region {}
   dimension: fa_fzg_sap_code {}
-  dimension: profitcenter {}
-  dimension: profitcenter_bezeichnung {}
-  dimension: erstzulassung_date {
-    type: date
-  }
   dimension: IST_AT_MONAT {
     type: number
   }
   dimension: min_gefahren_monat {
     type: number
   }
-  dimension: SOLL_AT_MONAT {
-    type: number
-  }
   dimension: std_gefahren_monat {
     type: number
   }
-  dimension: kostenstelle_beschreibung {
-
-  }
-  dimension: Anzal_behaelter {
-    type: number
-  }
+  dimension: profitcenter {}
+  dimension: profitcenter_bezeichnung {}
   dimension: Anzal_behaelter_sum {
     type: number
   }
-  dimension: reparaturkostengesamt {
-    type: number
-    sql: CAST(REPLACE(reparaturkostengesamt,",",".") AS FLOAT64) ;;
+  dimension: niederlassung_adjusted {}
+  dimension: fa_fzg_klasse {}
+  dimension: kostenstelle_beschreibung {}
+  dimension: erstzulassung_date {
+    type: date
   }
-
+  dimension: reparaturkostengesamt {}
+  dimension: SOLL_AT_MONAT {
+    type: number
+  }
+  dimension: ask {
+    type: number
+  }
+  dimension: gab {
+    type: number
+  }
+  dimension: umleerer {
+    type: number
+  }
+  dimension: sonstiges {
+    type: number
+  }
   dimension: rel_auslastung {
     sql: ${std_gefahren_monat}/(${SOLL_AT_MONAT}*8) ;;
-  }
-  dimension: fa_fzg_klasse {
   }
   dimension: fahrzeugtyp {
     type: string
@@ -836,13 +861,17 @@ view: haupttabelle_2 {
                             ELSE "Sonstiges"
                           END;;
   }
+  dimension: zielwert {
+    type: number
+    sql: CASE
+                            WHEN ${fahrzeugtyp}="ASK" THEN ${ask}/100
+                            WHEN ${fahrzeugtyp}="GAB" THEN ${gab}/100
+                            WHEN ${fahrzeugtyp} IN ("Seitenlader","Hecklader","Frontlader","Kopflader") THEN ${umleerer}/100
+                            WHEN ${fahrzeugtyp}="Sonstiges" THEN ${sonstiges}/100
+                          END ;;
+  }
 }
 
 explore: hauptabelle_3 {
   from: haupttabelle_2
- #  join: auslastung_kpi_gs {
- #   type: left_outer
- #   relationship: one_to_many
- #   sql_on: ${hauptabelle_3.niederlassung_adjusted} ;;
- # }
 }
