@@ -606,19 +606,19 @@ view: c_dwh_av_fa {
   }
 }
 
-explore: haupttabelle {
+explore: fahrzeugauslastung_day {
   hidden: yes
   from: c_dwh_av_fa
   join: c_dwh_av_fkd {
     relationship: many_to_one
     type: left_outer
-    sql_on: ${c_dwh_av_fkd.fkd_fa_recid} = ${haupttabelle.fa_recid}
-      and ${c_dwh_av_fkd.fi_nr} = ${haupttabelle.fi_nr};;
+    sql_on: ${c_dwh_av_fkd.fkd_fa_recid} = ${fahrzeugauslastung_day.fa_recid}
+      and ${c_dwh_av_fkd.fi_nr} = ${fahrzeugauslastung_day.fi_nr};;
   }
   join: t_kalender_gs {
     relationship: many_to_one
     type: left_outer
-    sql_on: ${haupttabelle.fa_ausf_date} = ${t_kalender_gs.datum_date} ;;
+    sql_on: ${fahrzeugauslastung_day.fa_ausf_date} = ${t_kalender_gs.datum_date} ;;
   }
 }
 
@@ -641,9 +641,9 @@ view: AT_MONATE {
   }
 }
 
-view: haupttabelle {
+view: fahrzeugauslastung_day {
   derived_table: {
-    explore_source: haupttabelle {
+    explore_source: fahrzeugauslastung_day {
       column: fi_region {}
       column: fi_bk_nr {}
       column: fa_fzg_sap_code {}
@@ -661,15 +661,15 @@ view: haupttabelle {
       column: Subfahrzeug {}
       column: Anzal_behaelter {}
       filters: {
-        field: haupttabelle.fa_fak_status_code
+        field: fahrzeugauslastung_day.fa_fak_status_code
         value: "-S"
       }
       filters: {
-        field: haupttabelle.fa_art_code
+        field: fahrzeugauslastung_day.fa_art_code
         value: "-A"
       }
       filters: {
-        field: haupttabelle.fi_region
+        field: fahrzeugauslastung_day.fi_region
         value: "Ost,Nord,Sued"
       }
       filters: {
@@ -677,9 +677,13 @@ view: haupttabelle {
         value: "NEIN"
       }
       filters: {
-        field: haupttabelle.fa_class_code
+        field: fahrzeugauslastung_day.fa_class_code
         value: "-\"TOUR_KOPF\""
       }
+   #   filters: {
+   #     field: fahrzeugauslastung_day.fa_ausf_date
+   #     value: "2021/06/22"
+   #   }
     }
   }
   dimension: fi_region {}
@@ -731,26 +735,26 @@ view: haupttabelle {
   }
 }
 
-explore: haupttabelle_2 {
+explore: fahrzeugauslastung_month {
   hidden: yes
-  from: haupttabelle
+  from: fahrzeugauslastung_day
   join: AT_MONATE {
     type: left_outer
     relationship: many_to_one
-    sql_on: ${AT_MONATE.datum_month} = ${haupttabelle_2.fa_ausf_month}
+    sql_on: ${AT_MONATE.datum_month} = ${fahrzeugauslastung_month.fa_ausf_month}
     and ${haupttabelle_2.feiertag} = "NEIN";;
   }
   join: c_dwh_navigator_fahrzeuge {
     type: left_outer
     relationship: many_to_one
-    sql_on: ${c_dwh_navigator_fahrzeuge.innenauftrag} = ${haupttabelle_2.fa_fzg_sap_code} ;;
+    sql_on: ${c_dwh_navigator_fahrzeuge.innenauftrag} = ${fahrzeugauslastung_month.fa_fzg_sap_code} ;;
   }
   join: c_dwh_navigator_sapkosten {
     type: left_outer
     relationship: one_to_one
-    sql_on: ${c_dwh_navigator_sapkosten.innenauftrag} = ${haupttabelle_2.fa_fzg_sap_code}
+    sql_on: ${c_dwh_navigator_sapkosten.innenauftrag} = ${fahrzeugauslastung_month.fa_fzg_sap_code}
     and ${c_dwh_navigator_sapkosten.monat} = ${haupttabelle_2.fa_ausf_month_num}
-    and ${c_dwh_navigator_sapkosten.jahr} = ${haupttabelle_2.fa_ausf_year};;
+    and ${c_dwh_navigator_sapkosten.jahr} = ${fahrzeugauslastung_month.fa_ausf_year};;
   }
   join: auslastung_kpi_gs {
     type: left_outer
@@ -759,9 +763,9 @@ explore: haupttabelle_2 {
   }
 }
 
-view: haupttabelle_2 {
+view: fahrzeugauslastung_month {
   derived_table: {
-    explore_source: haupttabelle_2 {
+    explore_source: fahrzeugauslastung_month {
       column: Subfahrzeug {}
       column: fa_ausf_month {}
       column: fi_bk_nr {}
@@ -788,12 +792,8 @@ view: haupttabelle_2 {
         value: "JA11"
       }
       filters: {
-        field: haupttabelle_2.Subfahrzeug
+        field: fahrzeugauslastung_month.Subfahrzeug
         value: "Eigene Fahrzeug"
-      }
-      filters: {
-        field: haupttabelle_2.fa_ausf_date
-        value: "2021/06/22"
       }
     }
   }
@@ -874,6 +874,12 @@ view: haupttabelle_2 {
   }
 }
 
-explore: hauptabelle_3 {
-  from: haupttabelle_2
+explore: fahrzeugauslastung_kpi_lookml {
+  from: fahrzeugauslastung_month
+  join: fahrzeugauslastung_day {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${fahrzeugauslastung_kpi_lookml.fa_fzg_sap_code} = ${fahrzeugauslastung_day.fa_fzg_sap_code}
+    and ${fahrzeugauslastung_kpi_lookml.fa_ausf_month} = ${fahrzeugauslastung_day.fa_ausf_month};;
+  }
 }
