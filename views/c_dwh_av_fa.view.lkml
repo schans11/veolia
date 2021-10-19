@@ -680,10 +680,10 @@ view: fahrzeugauslastung_day {
         field: fahrzeugauslastung_day.fa_class_code
         value: "-\"TOUR_KOPF\""
       }
-   #   filters: {
-   #     field: fahrzeugauslastung_day.fa_ausf_date
-   #     value: "2021/06/22"
-   #   }
+      filters: {
+        field: fahrzeugauslastung_day.fa_ausf_date
+        value: "2021/06/22"
+      }
     }
   }
   dimension: fi_region {}
@@ -718,10 +718,14 @@ view: fahrzeugauslastung_day {
     type: number
   }
   measure: min_gefahren_monat {
+    view_label: "Fahrzeugauslastung Month Explore"
+    description: "Gefahrene Minuten für dieses Fahrzeug in diesem Monat"
     type: sum
     sql: ${min_gefahren} ;;
   }
   measure: std_gefahren_monat {
+    view_label: "Fahrzeugauslastung Month Explore"
+    description: "Gefahrene Std für dieses Fahrzeug in diesem Monat"
     type: sum
     sql: ${min_gefahren}/60 ;;
   }
@@ -742,7 +746,7 @@ explore: fahrzeugauslastung_month {
     type: left_outer
     relationship: many_to_one
     sql_on: ${AT_MONATE.datum_month} = ${fahrzeugauslastung_month.fa_ausf_month}
-    and ${haupttabelle_2.feiertag} = "NEIN";;
+    and ${fahrzeugauslastung_month.feiertag} = "NEIN";;
   }
   join: c_dwh_navigator_fahrzeuge {
     type: left_outer
@@ -753,7 +757,7 @@ explore: fahrzeugauslastung_month {
     type: left_outer
     relationship: one_to_one
     sql_on: ${c_dwh_navigator_sapkosten.innenauftrag} = ${fahrzeugauslastung_month.fa_fzg_sap_code}
-    and ${c_dwh_navigator_sapkosten.monat} = ${haupttabelle_2.fa_ausf_month_num}
+    and ${c_dwh_navigator_sapkosten.monat} = ${fahrzeugauslastung_month.fa_ausf_month_num}
     and ${c_dwh_navigator_sapkosten.jahr} = ${fahrzeugauslastung_month.fa_ausf_year};;
   }
   join: auslastung_kpi_gs {
@@ -874,12 +878,18 @@ view: fahrzeugauslastung_month {
   }
 }
 
-explore: fahrzeugauslastung_kpi_lookml {
+explore: fahrzeugauslastung_month_explore {
   from: fahrzeugauslastung_month
   join: fahrzeugauslastung_day {
     type: left_outer
     relationship: one_to_many
-    sql_on: ${fahrzeugauslastung_kpi_lookml.fa_fzg_sap_code} = ${fahrzeugauslastung_day.fa_fzg_sap_code}
-    and ${fahrzeugauslastung_kpi_lookml.fa_ausf_month} = ${fahrzeugauslastung_day.fa_ausf_month};;
+    sql_on: ${fahrzeugauslastung_month_explore.fa_fzg_sap_code} = ${fahrzeugauslastung_day.fa_fzg_sap_code}
+    and ${fahrzeugauslastung_month_explore.fa_ausf_month} = ${fahrzeugauslastung_day.fa_ausf_month};;
   }
+  join: auslastung_kpi_gs {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${fahrzeugauslastung_month_explore.niederlassung_adjusted} = ${auslastung_kpi_gs.niederlassung} ;;
+  }
+
 }
