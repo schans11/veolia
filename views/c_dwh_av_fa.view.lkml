@@ -685,6 +685,7 @@ view: fahrzeugauslastung_day {
         value: "2021/06/22"
       }
     }
+   # datagroup_trigger: veolia_new_month
   }
   dimension: fi_region {}
   dimension: fi_bk_nr {
