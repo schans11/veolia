@@ -607,6 +607,7 @@ view: c_dwh_av_fa {
 }
 
 explore: haupttabelle {
+  hidden: yes
   from: c_dwh_av_fa
   join: c_dwh_av_fkd {
     relationship: many_to_one
@@ -621,7 +622,9 @@ explore: haupttabelle {
   }
 }
 
-explore: t_kalender_gs {}
+explore: t_kalender_gs {
+  hidden: yes
+}
 
 view: AT_MONATE {
   derived_table: {
@@ -729,6 +732,7 @@ view: haupttabelle {
 }
 
 explore: haupttabelle_2 {
+  hidden: yes
   from: haupttabelle
   join: AT_MONATE {
     type: left_outer

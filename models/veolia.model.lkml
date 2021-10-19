@@ -40,8 +40,3 @@ explore: vuc_ek_konditionen {
 explore: frachtbeauftragungen_u_kosten {
   group_label: "2. Philip"
 }
-
-
-
-
-explore: c_dwh_navigator_fahrzeuge {}
