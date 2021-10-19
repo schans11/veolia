@@ -740,6 +740,7 @@ view: fahrzeugauslastung_day {
 }
 
 explore: fahrzeugauslastung_month {
+  description: "Aggregate day data to month data"
   hidden: yes
   from: fahrzeugauslastung_day
   join: AT_MONATE {
@@ -879,6 +880,7 @@ view: fahrzeugauslastung_month {
 }
 
 explore: fahrzeugauslastung_month_explore {
+  description: "Explore in which all month, day and kpi data is available regarding fahrzeugauslastung"
   from: fahrzeugauslastung_month
   join: fahrzeugauslastung_day {
     type: left_outer
