@@ -769,6 +769,11 @@ explore: fahrzeugauslastung_month {
   }
 }
 
+access_grant: test_access {
+  user_attribute: testing_attribute
+  allowed_values: ["yes"]
+}
+
 view: fahrzeugauslastung_month {
   derived_table: {
     explore_source: fahrzeugauslastung_month {
@@ -810,7 +815,9 @@ view: fahrzeugauslastung_month {
   dimension: fi_bk_nr {
     type: number
   }
-  dimension: fi_region {}
+  dimension: fi_region {
+    required_access_grants: [test_access]
+  }
   dimension: fa_fzg_sap_code {}
   dimension: IST_AT_MONAT {
     type: number
