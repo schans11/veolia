@@ -38,6 +38,7 @@ view: fahrzeugauslastung_kpi {
 
   measure: Auslastung_link {
     type: average
+    hidden: yes
     value_format_name: percent_0
     sql: ${rel_auslastung} ;;
       link: {
@@ -48,6 +49,7 @@ view: fahrzeugauslastung_kpi {
 
   measure: Auslastung_last_month {
     type: average
+    hidden: yes
     value_format_name: percent_0
     sql: ${rel_auslastung} ;;
     drill_fields: [fi_region, niederlassung, Auslastung]

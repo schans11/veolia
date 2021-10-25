@@ -680,31 +680,40 @@ view: fahrzeugauslastung_day {
         field: fahrzeugauslastung_day.fa_class_code
         value: "-\"TOUR_KOPF\""
       }
-      filters: {
-        field: fahrzeugauslastung_day.fa_ausf_date
-        value: "2021/06/22"
-      }
+    #  filters: {
+    #    field: fahrzeugauslastung_day.fa_ausf_date
+    #    value: "2021/06/22"
+    #  }
     }
    # datagroup_trigger: veolia_new_month
   }
-  dimension: fi_region {}
+  dimension: fi_region {
+    hidden: yes
+  }
   dimension: fi_bk_nr {
+    hidden: yes
     type: number
   }
-  dimension: fa_fzg_sap_code {}
+  dimension: fa_fzg_sap_code {
+    hidden: yes
+  }
   dimension: fa_ausf_date {
     type: date
   }
   measure: IST_AT_MONAT {
+    hidden: yes
     type: count_distinct
     sql: ${fa_ausf_date} ;;
   }
   dimension: fa_ausf_month {
+    hidden: yes
     type: date_month
   }
   dimension: fa_ausf_month_num {
+    hidden: yes
   }
   dimension: fa_ausf_year {
+    hidden: yes
     type: date_year
   }
   dimension: fa_nr {
@@ -714,19 +723,21 @@ view: fahrzeugauslastung_day {
   dimension: fa_art_code {}
   dimension: fa_class_code {}
   dimension: feiertag {}
-  dimension: fa_fzg_klasse {}
+  dimension: fa_fzg_klasse {
+    hidden: yes
+  }
   dimension: min_gefahren {
     type: number
   }
   measure: min_gefahren_monat {
     view_label: "Fahrzeugauslastung Month Explore"
-    description: "Gefahrene Minuten für dieses Fahrzeug in diesem Monat"
+    hidden: yes
     type: sum
     sql: ${min_gefahren} ;;
   }
   measure: std_gefahren_monat {
     view_label: "Fahrzeugauslastung Month Explore"
-    description: "Gefahrene Std für dieses Fahrzeug in diesem Monat"
+    hidden: yes
     type: sum
     sql: ${min_gefahren}/60 ;;
   }
@@ -793,17 +804,19 @@ view: fahrzeugauslastung_month {
       column: erstzulassung_date { field: c_dwh_navigator_fahrzeuge.erstzulassung_date }
       column: reparaturkostengesamt { field: c_dwh_navigator_sapkosten.reparaturkostengesamt }
       column: SOLL_AT_MONAT { field: AT_MONATE.SOLL_AT_MONAT }
-      filters: {
-        field: c_dwh_navigator_fahrzeuge.profitcenter
-        value: "JA11"
-      }
-      filters: {
-        field: fahrzeugauslastung_month.Subfahrzeug
-        value: "Eigene Fahrzeug"
-      }
+    #  filters: {
+    #    field: c_dwh_navigator_fahrzeuge.profitcenter
+    #    value: "JA11"
+    #  }
+    #  filters: {
+    #    field: fahrzeugauslastung_month.Subfahrzeug
+    #    value: "Eigene Fahrzeug"
+    #  }
     }
   }
-  dimension: Subfahrzeug {}
+  dimension: Subfahrzeug {
+    hidden: yes
+  }
   dimension: fa_ausf_month {
     type: date_month
   }
@@ -816,9 +829,11 @@ view: fahrzeugauslastung_month {
     type: number
   }
   dimension: min_gefahren_monat {
+    description: "Gefahrene Minuten für dieses Fahrzeug in diesem Monat"
     type: number
   }
   dimension: std_gefahren_monat {
+    description: "Gefahrene Std für dieses Fahrzeug in diesem Monat"
     type: number
   }
   dimension: profitcenter {}
@@ -826,7 +841,12 @@ view: fahrzeugauslastung_month {
   dimension: Anzal_behaelter_sum {
     type: number
   }
-  dimension: niederlassung_adjusted {}
+  dimension: niederlassung_adjusted {
+    hidden: yes
+  }
+  dimension: niederlassung {
+    sql: ${niederlassung_adjusted} ;;
+  }
   dimension: fa_fzg_klasse {}
   dimension: kostenstelle_beschreibung {}
   dimension: erstzulassung_date {
@@ -837,15 +857,19 @@ view: fahrzeugauslastung_month {
     type: number
   }
   dimension: ask {
+    hidden: yes
     type: number
   }
   dimension: gab {
+    hidden: yes
     type: number
   }
   dimension: umleerer {
+    hidden: yes
     type: number
   }
   dimension: sonstiges {
+    hidden: yes
     type: number
   }
   dimension: rel_auslastung {
@@ -894,5 +918,6 @@ explore: fahrzeugauslastung_month_explore {
     relationship: many_to_one
     sql_on: ${fahrzeugauslastung_month_explore.niederlassung_adjusted} = ${auslastung_kpi_gs.niederlassung} ;;
   }
+
 
 }
