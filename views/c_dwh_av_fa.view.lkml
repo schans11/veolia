@@ -888,6 +888,7 @@ view: fahrzeugauslastung_month {
 }
 
 explore: fahrzeugauslastung_month_explore {
+  required_access_grants: [test_access]
   description: "Explore in which all month, day and kpi data is available regarding fahrzeugauslastung"
   from: fahrzeugauslastung_month
   join: fahrzeugauslastung_day {
