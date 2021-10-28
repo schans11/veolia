@@ -366,6 +366,6 @@ view: report {
 
 #step 1.6
 
-explore: report {
-  hidden: yes
-}
+#explore: report {
+ # hidden: yes
+#}
